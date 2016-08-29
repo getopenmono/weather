@@ -1,0 +1,18 @@
+{
+  "coord":{
+    "lon":12.57,
+    "lat":55.68
+  },
+  "weather":[
+    {
+      "id":803,
+      "main":"Clouds",
+      "description":"broken clouds",
+      "icon":"04d"
+    }
+  ],
+  "base":"cmc stations",
+  "main":{
+    "temp":285.086,
+    "pressure":1019.66,
+    "hum

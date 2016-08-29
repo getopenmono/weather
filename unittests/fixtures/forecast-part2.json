@@ -1,0 +1,37 @@
+st":[
+    {
+      "dt":1463400000,
+      "main":{
+        "temp":288.78,
+        "temp_min":288.776,
+        "temp_max":288.78,
+        "pressure":1023.83,
+        "sea_level":1033.8,
+        "grnd_level":1023.83,
+        "humidity":76,
+        "temp_kf":0
+      },
+      "weather":[
+        {
+          "id":800,
+          "main":"Clear",
+          "description":"clear sky",
+          "icon":"01d"
+        }
+      ],
+      "clouds":{
+        "all":0
+      },
+      "wind":{
+        "speed":2.92,
+        "deg":307.51
+      },
+      "sys":{
+        "pod":"d"
+      },
+      "dt_txt":"2016-05-16 12:00:00"
+    },
+    {
+      "dt":1463410800,
+      "main":{
+        "temp":290.22

@@ -1,0 +1,20 @@
+# This software is part of OpenMono, see http://developer.openmono.com
+# Released under the MIT license, see LICENSE.txt
+unittests: $(BUILD_DIR)/unittests
+	$<
+
+libsources := $(wildcard lib/*.cpp lib/*.c)
+libheaders := $(wildcard lib/*.hpp)
+tests := $(wildcard unittests/*.cpp) $(wildcard unittests/*.hpp)
+
+$(BUILD_DIR)/unittests: $(tests) $(libsources) $(libheaders)
+	-mkdir -p $(BUILD_DIR)
+	g++ -Wall -Wno-unused-result \
+		-o $@ \
+		-g -Wl,-map,$(BUILD_DIR)/unittests.map \
+		-I lib \
+		$(filter %.cpp,$^) $(filter %.c,$^)
+
+.PHONY: clean-unittests
+clean-unittests:
+	$(RM) -r $(BUILD_DIR)/unittests*

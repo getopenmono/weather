@@ -1,0 +1,22 @@
+idity":72,
+    "temp_min":285.086,
+    "temp_max":285.086,
+    "sea_level":1021.79,
+    "grnd_level":1019.66
+  },
+  "wind":{
+    "speed":9.85,
+    "deg":317.502
+  },
+  "clouds":{
+    "all":68
+  },
+  "dt":1463393862,
+  "sys":{
+    "message":0.0035,
+    "country":"DK",
+    "sunrise":1463367329,
+    "sunset":1463426277
+  },
+  "id":2618425,
+  "name":"Cop
