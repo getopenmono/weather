@@ -50,7 +50,7 @@ AppController::AppController ()
     background(WhiteColor),
     topLabel(Rect(0,200,176,20),"Weather Forecast"),
     wifi(0),
-    dimmer(20*1000,true),
+    dimmer(20*10000,true),
     sleeper(10*1000,true),
     view1(0),
     view2(0)
@@ -120,7 +120,7 @@ void AppController::interpretForecast ()
     topLabel.setText((char const *)city);
     topLabel.show();
     forecast = openweathermap::parseForecast(buffer,FORECASTS_TO_KEEP);
-    // Just show the first two forecasts.
+    // Just show the next two forecasts.
     showForecast1(forecast[0]);
     showForecast2(forecast[1]);
 }
@@ -170,11 +170,11 @@ char const * AppController::conditionToIcon (weather::Condition condition)
         case weather::Night_FewClouds: return "/sd/mono/weather/Night_FewClouds.bmp";
         case weather::Night_ScatteredClouds: return "/sd/mono/weather/Night_ScatteredClouds.bmp";
         case weather::Night_Overcast: return "/sd/mono/weather/Night_Overcast.bmp";
-        case weather::Night_Rain: return "/sd/mono/weather/Night_ShowerRain.bmp";
-        case weather::Night_ShowerRain: return "/sd/mono/weather/Night_ShowerRain.bmp";
+        case weather::Night_Rain: return "/sd/mono/weather/Night_Rain.bmp";
+        case weather::Night_ShowerRain: return "/sd/mono/weather/Night_Rain.bmp";
         case weather::Night_Thunder: return "/sd/mono/weather/Night_Thunder.bmp";
         case weather::Night_Snow: return "/sd/mono/weather/Night_Snow.bmp";
-        case weather::Night_Mist: return "/sd/mono/weather/Night_Mist.bmp";
+        case weather::Night_Mist: return "/sd/mono/weather/Day_Mist.bmp";
         default:
         case weather::Unknown: return "/sd/mono/weather/Night_Snow.bmp";
     }
@@ -221,9 +221,9 @@ String AppController::convertRainAccordingToConf (uint8_t const * rain)
 {
     debug(String::Format("rain: %s",(char const *)rain));
     if (strlen((char const *)rain) == 0)
-        return String();
+        return String((char const *)rain);
     float mmRain = atof((char const *)rain);
-    if (unit != MONO_WEATHER_METRIC)
+    if (unit == MONO_WEATHER_METRIC)
         return String::Format("%u mm",(unsigned)(mmRain+0.5));
     else
     {
@@ -297,6 +297,7 @@ void AppController::networkReadyHandler ()
         country.c_str(),
         MONO_OPENWEATHERMAP_APPID
     );
+    debug(url);
     wifi->get(castToBytes(url()),&buffer,this,&AppController::handleWifiResult,&AppController::handleWifiStatus);
 }
 
@@ -309,8 +310,10 @@ void AppController::handleWifiStatus (Wifi::Status status)
 void AppController::handleWifiResult (IByteBuffer *)
 {
     debug("Wifi result arrived");
-    interpretForecast();
+    topLabel.setText("Got forecast"),
+    topLabel.show();
     setupTimersAndHandler();
+    asyncCall(&AppController::interpretForecast);
 }
 
 void AppController::setupTimersAndHandler ()
