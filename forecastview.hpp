@@ -9,6 +9,7 @@ class ForecastView
 :
     public mono::ui::View
 {
+    mono::geo::Point position;
     mono::ui::TextLabelView time;
     mono::media::BMPImage image;
     mono::ui::ImageView icon;

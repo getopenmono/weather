@@ -15,6 +15,7 @@ ForecastView::ForecastView
     String windStr,
     String rainStr
 ) :
+    position(0,0),
     time(Rect(0,0,96,20),timeStr),
     image(imagePath),
     icon(&image),
@@ -44,17 +45,21 @@ void ForecastView::show ()
     temperature.show();
     wind.show();
     rain.show();
-
     mono::ui::View::show();
 }
 
 void ForecastView::setPosition (Point const & point)
 {
-    icon.setRect(Rect(point.X(),point.Y(),80,80));
-    time.setRect(Rect(point.X()+80,point.Y()+5,96,20));
-    temperature.setRect(Rect(point.X()+80,point.Y()+25,96,20));
-    wind.setRect(Rect(point.X()+80,point.Y()+45,96,20));
-    rain.setRect(Rect(point.X()+80,point.Y()+65,96,20));
+    position = point;
+    uint16_t picSz = 80;
+    uint16_t margin = 5;
+    uint16_t x1 = position.X() + margin;
+    uint16_t x2 = position.X() + margin + picSz;
+    icon.setRect(Rect(x1,position.Y(),picSz,picSz));
+    time.setRect(Rect(x2,position.Y()+margin,96,20));
+    temperature.setRect(Rect(x2,position.Y()+25,96,20));
+    wind.setRect(Rect(x2,position.Y()+45,96,20));
+    rain.setRect(Rect(x2,position.Y()+65,96,20));
 }
 
 void ForecastView::repaint ()
@@ -64,4 +69,6 @@ void ForecastView::repaint ()
     temperature.repaint();
     wind.repaint();
     rain.repaint();
+    painter.setForegroundColor(ConcreteColor);
+    painter.drawHLine(position.X()+30,position.X()+146,position.Y()+85);
 }

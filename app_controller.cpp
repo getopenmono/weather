@@ -97,7 +97,6 @@ void AppController::monoWakeFromSleep ()
 
 void AppController::readForecastFromSdCardAndShow ()
 {
-    // This crashes the app: IApplicationContext::Instance->SleepForMs(50);
     debug("reading previous forecast from SD card");
     String previousForecast = (char const *)MONO_WEATHER_FORECAST;
     debug(String::Format("Reading %s",previousForecast()));
@@ -127,12 +126,12 @@ void AppController::interpretForecast ()
 
 void AppController::showForecast1 (weather::Entry const & entry)
 {
-    showForecast(entry,view1,0);
+    showForecast(entry,view1,5);
 }
 
 void AppController::showForecast2 (weather::Entry const & entry)
 {
-    showForecast(entry,view2,100);
+    showForecast(entry,view2,95);
     asyncCall(&AppController::undim);
 }
 
