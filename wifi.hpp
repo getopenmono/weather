@@ -6,10 +6,12 @@
 #include <mono.h>
 #include <wireless/module_communication.h>
 #include <wireless/redpine_module.h>
+#include <network_request.h>
 #include "lib/bytestring.hpp"
 #include "lib/ibytebuffer.hpp"
 #include "lib/iconfiguration.hpp"
 using mono::network::HttpClient;
+using mono::network::INetworkRequest;
 
 #define MONO_WIFI_SSID (uint8_t const *)(CONF_KEY_ROOT "/wifi/ssid.txt")
 #define MONO_WIFI_PASSWORD (uint8_t const *)(CONF_KEY_ROOT "/wifi/password.txt")
@@ -27,7 +29,9 @@ public:
         Wifi_NotReady, // 4
         Wifi_BrokenUrl, // 5
         Wifi_Receiving, // 6
-        Wifi_BrokenReply // 7
+        Wifi_BrokenCommunication, // 7
+        Wifi_DnsResolutionFailed, // 8
+        Wifi_UnknownError // 9
     };
 
     /**
@@ -40,7 +44,7 @@ public:
     /**
      * Start up a wireless connection.
      * @param  context object that will handle the connection.
-     * @param  handler method in object that will be called when connection is established.
+     * @param  handler method in context that will be called when connection is established.
      * @return         status of connection when starting connection.
      */
     template <typename Class>
@@ -58,7 +62,7 @@ public:
     /**
      * Retrieve a document via HTTP GET.
      * @param  url             URL to request document from.
-     * @param  buffer          a byte buffer that can store the document.
+     * @param  buffer          byte buffer that can store the document.
      * @param  context         object that will handle responses and statuses.
      * @param  documentHandler method in object that will be called when the document has been retrieved.
      * @param  changeHandler   optional method in object that will be called whenever the status changes.
@@ -100,6 +104,7 @@ private:
     IByteBuffer * _buffer;
     Status _status;
     IConfiguration const & configuration;
+    void networkErrorHandler (INetworkRequest::ErrorEvent * error);
     mbed::FunctionPointerArg1<void,IByteBuffer*> receivedHandler;
     mbed::FunctionPointerArg1<void,Status> statusHandler;
     mbed::FunctionPointerArg1<void,void> connectHandler;

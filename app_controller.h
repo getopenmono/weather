@@ -35,6 +35,7 @@ class AppController
     void undim ();
     void networkReadyHandler ();
     void handleWifiStatus (Wifi::Status);
+    void restartRequestWithError (char const * message);
     void handleWifiResult (IByteBuffer * result);
     void showForecast1 (weather::Entry const &);
     void showForecast2 (weather::Entry const &);

@@ -260,8 +260,8 @@ void AppController::getNewForecast()
     debug("Initialising wifi");
     topLabel.setText("Getting forecast"),
     topLabel.show();
-    if (wifi != 0) delete wifi;
-    wifi = new Wifi(conf);
+    if (0 == wifi)
+        wifi = new Wifi(conf);
     wifi->connect<AppController>(this,&AppController::networkReadyHandler);
     if (wifi->status() == Wifi::Wifi_BrokenConfiguration)
         return error("SD card conf broken","Wifi conf on SD card broken");
@@ -302,8 +302,33 @@ void AppController::networkReadyHandler ()
 
 void AppController::handleWifiStatus (Wifi::Status status)
 {
-    if (Wifi::Wifi_Ready == status) printf("\r\n");
-    else printf(".");
+    switch (status)
+    {
+        case Wifi::Wifi_Ready:
+            printf("\r\n");
+            break;
+        case Wifi::Wifi_NotReady:
+            return restartRequestWithError("wifi not ready");
+        case Wifi::Wifi_BrokenUrl:
+            printf("broken URL");
+            break;
+        case Wifi::Wifi_Receiving:
+            printf(".");
+            break;
+        case Wifi::Wifi_BrokenCommunication:
+            return restartRequestWithError("wifi communication error");
+        case Wifi::Wifi_DnsResolutionFailed:
+            return restartRequestWithError("DNS resolution failed");
+        case Wifi::Wifi_UnknownError:
+        default:
+            return restartRequestWithError("Unknown wifi error");
+    }
+}
+
+void AppController::restartRequestWithError (char const * message)
+{
+    printf(message);
+    asyncCall(&AppController::getNewForecast);
 }
 
 void AppController::handleWifiResult (IByteBuffer *)

@@ -40,11 +40,36 @@ void Wifi::networkReadyHandler ()
     connectHandler.call();
 }
 
+void Wifi::networkErrorHandler (INetworkRequest::ErrorEvent * error)
+{
+    switch (error->ErrorCode)
+    {
+        case INetworkRequest::URL_PARSE_ERROR:
+            _status = Wifi_BrokenUrl;
+            break;
+        case INetworkRequest::NETWORK_NOT_READY_ERROR:
+            _status = Wifi_NotReady;
+            break;
+        case INetworkRequest::COMMUNICATION_ERROR:
+            _status = Wifi_BrokenCommunication;
+            break;
+        case INetworkRequest::DNS_RESOLUTION_FAILED_ERROR:
+            _status = Wifi_DnsResolutionFailed;
+            break;
+        case INetworkRequest::INVALID_STATE_ERROR:
+        default:
+            _status = Wifi_UnknownError;
+            break;
+    }
+    statusHandler.call(_status);
+}
+
 Wifi::Status Wifi::startRequest (uint8_t const * url)
 {
     destroyClient();
     client = mono::network::HttpClient((char const *)url);
     client.setDataReadyCallback<Wifi>(this,&Wifi::httpHandleData);
+    client.setErrorCallback<Wifi>(this,&Wifi::networkErrorHandler);
     _status = Wifi_Receiving;
     return _status;
 }
