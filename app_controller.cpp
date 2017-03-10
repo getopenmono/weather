@@ -86,7 +86,7 @@ void AppController::monoWakeFromReset ()
 
 void AppController::asyncCall (void (AppController::*method)())
 {
-    Timer::callOnce<AppController>(0,this,method);
+    mono::Timer::callOnce<AppController>(0,this,method);
 }
 
 void AppController::monoWakeFromSleep ()

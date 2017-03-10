@@ -65,10 +65,11 @@ void ForecastView::setPosition (Point const & point)
 void ForecastView::repaint ()
 {
     time.repaint();
-    icon.repaint();
+    rain.repaint();
     temperature.repaint();
     wind.repaint();
-    rain.repaint();
+    icon.repaint();
+
     painter.setForegroundColor(ConcreteColor);
     painter.drawHLine(position.X()+30,position.X()+146,position.Y()+85);
 }
